@@ -10,16 +10,19 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int counter = 0;
+  int setLimit = 0;
 
   void decreaseCounter() {
     setState(() {
       counter--;
+      countLimit();
     });
   }
 
   void increaseCounter() {
     setState(() {
       counter++;
+      countLimit();
     });
   }
 
@@ -35,12 +38,32 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void setLimitTo(int newLimit) {
+    setState(() {
+      setLimit = newLimit;
+    });
+  }
+
+  String countLimit() {
+    // if setLimit is set to zero, then do not do anything
+    if(setLimit != 0) {
+      if(setLimit-counter > 0) {
+        return ('${setLimit-counter} Available');
+      } else {
+        return ('${setLimit-counter} Limit Reached');
+      }
+    }
+    return '';
+  }
+
   void navigateToSettingsPage() {
     Navigator.push(
       context, 
       MaterialPageRoute(builder: (context) => SettingsPage(
         counter: counter,
+        setLimit: setLimit,
         setCounterTo: setCounterTo,
+        setLimitTo: setLimitTo,
       ))
     );
   }
@@ -134,7 +157,22 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   // counter digit
-                  Text(counter.toString(), style: TextStyle(fontSize: 75)),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(counter.toString(), style: TextStyle(fontSize: 75)),
+                        // hide limit banner if setLimit is set to zero,
+                        // othwerwise show banner 
+                        Text(
+                          setLimit == 0
+                          ? '' : countLimit(), 
+                          style: TextStyle(fontSize: 15)
+                        ),
+                      ],
+                    ),
+                  ),
                   // right side
                   Expanded(
                     child: GestureDetector(

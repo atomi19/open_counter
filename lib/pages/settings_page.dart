@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
   final int counter;
+  final int setLimit;
   final Function(int) setCounterTo;
+  final Function(int) setLimitTo;
 
   const SettingsPage({
     super.key,
     required this.counter,
+    required this.setLimit,
     required this.setCounterTo,
+    required this.setLimitTo,
   });
 
   @override
@@ -17,11 +21,13 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController counterController = TextEditingController();
+  final TextEditingController limitController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     counterController.text = widget.counter.toString();
+    limitController.text = widget.setLimit.toString();
   }
 
   Widget buildSettingsCard(Widget child) {
@@ -97,6 +103,34 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               )
             ),
+            buildSettingsCard(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Set Limit To', style: TextStyle(fontSize: 16)),
+                  SizedBox(
+                    width: 100,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      textAlign: TextAlign.end,
+                      keyboardType: TextInputType.number,
+                      controller: limitController,
+                      onChanged: (String value) {
+                        int newLimit = 0;
+                        try {
+                          newLimit = value == '' ? 0 : int.parse(value);
+                        } catch (e) {
+                          newLimit = 0;
+                        }
+                        widget.setLimitTo(newLimit);
+                      }
+                    ),
+                  )
+                ],
+              )
+            )
           ],
         ),
       ),
