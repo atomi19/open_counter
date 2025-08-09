@@ -1,6 +1,8 @@
+import 'package:open_counter/logic/data_logic.dart';
 import 'package:open_counter/pages/settings_page.dart';
 import 'package:open_counter/widgets/build_button.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -11,6 +13,22 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int counter = 0;
   int setLimit = 0;
+  bool enableTapArea = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTapAreaSetting();
+  }
+
+  void _loadTapAreaSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? value =  prefs.getBool('isTapAreaEnabled');
+    
+    setState(() {
+      enableTapArea = value ?? true;
+    });
+  }
 
   void decreaseCounter() {
     setState(() {
@@ -23,6 +41,15 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       counter++;
       countLimit();
+    });
+  }
+
+  // switch tap area setting to true (so tap area enabled) or false (tap area is disabled)
+  // and save it to shared_preferences
+  void switchTapArea(bool isTapAreaEnabled) {
+    setState(() {
+      saveBool('isTapAreaEnabled', isTapAreaEnabled);
+      enableTapArea = isTapAreaEnabled;
     });
   }
 
@@ -62,8 +89,10 @@ class _MainPageState extends State<MainPage> {
       MaterialPageRoute(builder: (context) => SettingsPage(
         counter: counter,
         setLimit: setLimit,
+        enableTapArea: enableTapArea,
         setCounterTo: setCounterTo,
         setLimitTo: setLimitTo,
+        switchTapArea: switchTapArea,
       ))
     );
   }
@@ -153,7 +182,12 @@ class _MainPageState extends State<MainPage> {
                           )
                         )
                       ),
-                      onTap: () => decreaseCounter(),
+                      // click area
+                      onTap: () {
+                        if(enableTapArea) {
+                          decreaseCounter();
+                        }
+                      }
                     ),
                   ),
                   // counter digit
@@ -187,7 +221,12 @@ class _MainPageState extends State<MainPage> {
                           )
                         ),
                       ),
-                      onTap: () => increaseCounter(),
+                      // click area
+                      onTap: () {
+                        if(enableTapArea) {
+                          increaseCounter();
+                        }
+                      }
                     ),
                   ),
                 ],

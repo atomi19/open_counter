@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 class SettingsPage extends StatefulWidget {
   final int counter;
   final int setLimit;
+  final bool enableTapArea;
   final Function(int) setCounterTo;
   final Function(int) setLimitTo;
+  final Function(bool) switchTapArea;
 
   const SettingsPage({
     super.key,
     required this.counter,
     required this.setLimit,
+    required this.enableTapArea,
     required this.setCounterTo,
     required this.setLimitTo,
+    required this.switchTapArea,
   });
 
   @override
@@ -22,12 +26,14 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController counterController = TextEditingController();
   final TextEditingController limitController = TextEditingController();
+  late bool _enableTapArea;
 
   @override
   void initState() {
     super.initState();
     counterController.text = widget.counter.toString();
     limitController.text = widget.setLimit.toString();
+    _enableTapArea = widget.enableTapArea;
   }
 
   Widget buildSettingsCard(Widget child) {
@@ -127,6 +133,23 @@ class _SettingsPageState extends State<SettingsPage> {
                         widget.setLimitTo(newLimit);
                       }
                     ),
+                  )
+                ],
+              )
+            ),
+            buildSettingsCard(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Enable Click Area', style: TextStyle(fontSize: 16)),
+                  Switch(
+                    value: _enableTapArea, 
+                    onChanged: (bool value) {
+                      setState(() {
+                        _enableTapArea = !_enableTapArea;
+                        widget.switchTapArea(_enableTapArea);
+                      });
+                    }
                   )
                 ],
               )
