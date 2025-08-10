@@ -18,7 +18,17 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    _loadCounterSetting();
     _loadTapAreaSetting();
+  }
+
+  void _loadCounterSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? value = prefs.getInt('counter');
+
+    setState(() {
+      counter = value ?? 0;
+    });
   }
 
   void _loadTapAreaSetting() async {
@@ -33,6 +43,7 @@ class _MainPageState extends State<MainPage> {
   void decreaseCounter() {
     setState(() {
       counter--;
+      saveInt('counter', counter);
       countLimit();
     });
   }
@@ -40,6 +51,7 @@ class _MainPageState extends State<MainPage> {
   void increaseCounter() {
     setState(() {
       counter++;
+      saveInt('counter', counter);
       countLimit();
     });
   }
