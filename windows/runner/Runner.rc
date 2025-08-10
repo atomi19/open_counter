@@ -95,7 +95,7 @@ BEGIN
             VALUE "InternalName", "open_counter" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "open_counter.exe" "\0"
-            VALUE "ProductName", "open_counter" "\0"
+            VALUE "ProductName", "Open Counter" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
